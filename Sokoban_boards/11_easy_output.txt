@@ -1,0 +1,41 @@
+------------------------------------------------------------
+Results of Breadth First Search
+solution: D,L,L,U,R,D,R,U,U,U,D,D,R,R,U,U,U,L,L
+nodes generated: 1073
+nodes repeated:   612
+nodes in fringe:   25
+nodes explored:   312
+running time:	0.65202498436 seconds
+------------------------------------------------------------
+Results of Depth First Search
+solution: D,L,L,U,R,L,D,R,R,U,U,U,D,D,L,L,D,R,R,R,R,U,U,U,U,L,L
+nodes generated:  793
+nodes repeated:   466
+nodes in fringe:   12
+nodes explored:   262	
+running time:	0.483373165131 seconds
+------------------------------------------------------------
+Results of Uniform Cost Search
+solution: D,L,L,U,R,D,R,U,U,U,D,D,R,R,U,U,U,L,L
+nodes generated:  877
+nodes repeated:   503
+nodes in fringe:   18
+nodes explored:   356
+running time:	0.537933826447 seconds
+------------------------------------------------------------
+Results of Greedy Best First Search
+solution: D,L,L,U,R,D,R,U,U,U,D,D,R,R,U,U,U,L,L
+nodes generated:  118
+nodes repeated:    50
+nodes in fringe:   24
+nodes explored:    44
+running time:	0.0742259025574 seconds
+------------------------------------------------------------
+Results of A* search
+solution: D,L,L,U,R,D,R,U,U,U,D,D,R,R,U,U,U,L,L
+nodes generated:  213
+nodes repeated:    95
+nodes in fringe:   35
+nodes explored:    83
+running time:	0.133935928345 seconds
+------------------------------------------------------------
