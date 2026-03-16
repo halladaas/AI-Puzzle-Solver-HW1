@@ -49,16 +49,33 @@ class PriorityQueue:
     def empty(self): return not self.heap
 
 
+def _stateKey(state):
+    """Return a hashable key for a state, excluding the mutable path component."""
+    elem = state[0]
+    return tuple(elem) if isinstance(elem, list) else elem
+
 def generalSearch(problem, strategy):
-    strategy.push(problem.getStartState())
+    start = problem.getStartState()
+    strategy.push(start)
     # added counters to keep track of the number of nodes expanded/generated
     num_nodes_exp = 0
     num_nodes_gen = 1
+    # full pruning: closed set of already-expanded state keys
+    visited = set()
+    # parent + ancestor tracking: maps each state key to its parent's state key;
+    # allows tracing the full ancestry of any expanded node back to the start
+    parent = {_stateKey(start): None}
     while not strategy.empty():
-        num_nodes_exp += 1
         #> uncomment below to print the priority queue at each iteration
         #print(strategy.heap)
         node = strategy.pop()
+        node_key = _stateKey(node)
+
+        # full pruning: skip states that have already been expanded
+        if node_key in visited:
+            continue
+        visited.add(node_key)
+        num_nodes_exp += 1
 
         #> uncomment below to print the node being expanded
         #print(node)
@@ -66,8 +83,15 @@ def generalSearch(problem, strategy):
             return (node, num_nodes_exp, num_nodes_gen)
 
         for move in problem.getSuccessors(node):
-            strategy.push(move)
-            num_nodes_gen += 1
+            move_key = _stateKey(move)
+            # full pruning: only add states not yet expanded
+            if move_key not in visited:
+                # parent + ancestor tracking: record first-discovered parent so
+                # full ancestry can be traced back to the start via the parent dict
+                if move_key not in parent:
+                    parent[move_key] = node_key
+                strategy.push(move)
+                num_nodes_gen += 1
         #> uncomment to print num of nodes generated after each node expansion
         #print(num_nodes_gen)
     return None
