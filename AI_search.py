@@ -49,45 +49,101 @@ class PriorityQueue:
     def empty(self): return not self.heap
 
 
-def generalSearch(problem, strategy):
-    strategy.push(problem.getStartState())
+#! aziz's implementation
+
+def generalSearch(problem, strategy, pruning = 'none'):
+    start_state = problem.getStartState()
+
+    strategy.push((start_state, None, [start_state]))
+    #! node now looks like (state, parent, path)
+
     # added counters to keep track of the number of nodes expanded/generated
     num_nodes_exp = 0
     num_nodes_gen = 1
+    
+    #! aziz: WIP
+    explored = set()
+
     while not strategy.empty():
+        state, parent, path = strategy.pop()
+        
+        #! aziz: WIP
+        if pruning == 'full':
+            state_ref = str(state)
+            if state_ref in explored: continue
+            explored.add(state_ref)
+            
         num_nodes_exp += 1
         #> uncomment below to print the priority queue at each iteration
         #print(strategy.heap)
-        node = strategy.pop()
 
         #> uncomment below to print the node being expanded
-        #print(node)
-        if problem.isGoalState(node):
-            return (node, num_nodes_exp, num_nodes_gen)
+        #print(current_node)
+        if problem.isGoalState(state):
+            return (state, num_nodes_exp, num_nodes_gen)
+        
+        for move in problem.getSuccessors(state):
+            #! aziz: problem-specific extraction:
+            #! 8puzzle returns (state, action, cost) -> need move[0]
+            #! MT returns the state tuple directly -> move
+            if isinstance(problem, MagicTriangleProblem):
+                next_state = move
+            else:
+                next_state = move[0]
+                
+            #! parent pruning: avoid moving back directly to the previous state
+            if pruning == 'parent' and parent is not None:
+                if next_state == parent:
+                    #print('DEBUG PARENT PRUNED')
+                    continue
+            
+            #! ancestor pruning: avoid forming cycles in the current path
+            if pruning == 'ancestor':
+                if next_state in path:
+                    continue
+            
+            #! update the new path
+            new_path = path + [next_state]
 
-        for move in problem.getSuccessors(node):
-            strategy.push(move)
+            #! push new tuple into strategy
+            strategy.push((next_state, state, new_path))
             num_nodes_gen += 1
+
         #> uncomment to print num of nodes generated after each node expansion
         #print(num_nodes_gen)
     return None
 
-def breadthFirstSearch(problem): return generalSearch(problem, Queue())
 
-def depthFirstSearch(problem): return generalSearch(problem, Stack())
+#! aziz: updated the arguments and handling the node tuple
+def breadthFirstSearch(problem, pruning = 'none'): return generalSearch(problem, Queue(), pruning)
 
-def iterativeDeepeningSearch(problem):
+def depthFirstSearch(problem, pruning = 'none'): return generalSearch(problem, Stack(), pruning)
+
+#! aziz: modified search to allow pruning
+def iterativeDeepeningSearch(problem, pruning = 'none'):
     num_nodes_exp = 0
     num_nodes_gen = 1
-    def depthLimitedDFS(problem, state, depth):
+    def depthLimitedDFS(problem, state, depth, parent=None, path=None):
+        if path is None: path = [state]
         nonlocal num_nodes_gen, num_nodes_exp
         num_nodes_exp += 1
         if problem.isGoalState(state): return state
         if depth <= 0: return None
         for move in problem.getSuccessors(state):
+            if isinstance(problem, MagicTriangleProblem):
+                next_state = move
+            else:
+                next_state = move[0]
+                
+            if pruning == 'parent' and parent is not None and next_state == parent: 
+                continue
+            if pruning == 'ancestor' and next_state in path: 
+                continue
+            
             num_nodes_gen += 1
-            solution = depthLimitedDFS(problem, move, depth-1)
-            if solution is not None: return solution
+            solution = depthLimitedDFS(problem, next_state, depth-1, state, path + [next_state])
+            if solution is not None: 
+                return solution
         return None
 
     depth = 1
@@ -97,33 +153,33 @@ def iterativeDeepeningSearch(problem):
             return (solution, num_nodes_exp, num_nodes_gen)
         depth += 1
 
-def uniformCostSearch(problem):
-    
+def uniformCostSearch(problem, pruning = 'none'):
     #!----Halla : added isinstance checking and path cost for the MTP
     if isinstance(problem, EightPuzzleProblem):
-        pathCost = lambda state: (sum(state[3]) if len(state) > 3 else len(state[-1]))
-    
-    if isinstance(problem, MagicTriangleProblem ):
-        pathCost = lambda state: (len(state[1]))
+        pathCost = lambda node: (sum(node[0][3]) if len(node[0]) > 3 else len(node[0][-1]))
+    elif isinstance(problem, MagicTriangleProblem ):
+        pathCost = lambda node: (len(node[2]))
+    #! aziz: add a fallback case (temporary until 8puzzle & Sokoban)
+    else:
+        pathCost = lambda node: len(node[2]) 
         
-    return generalSearch(problem, PriorityQueue(pathCost))
+    return generalSearch(problem, PriorityQueue(pathCost),  pruning)
 
-def greedySearch(problem, heuristic):
-    return generalSearch(problem, PriorityQueue(heuristic))
+def greedySearch(problem, heuristic, pruning = 'none'):
+    return generalSearch(problem, PriorityQueue( lambda node: heuristic(node[0])), pruning)
 
-def astarSearch(problem, heuristic):
+def astarSearch(problem, heuristic, pruning = 'none'):
     # the given function uses the number of steps as g-cost (uniform cost)
     # the number of elements in a state changes for different problems, hence
     # the following checks
     
     #!----Halla : added isinstance checking and path cost for the MTP
     if isinstance(problem, EightPuzzleProblem):
-        totalCost = lambda state: (sum(state[3]) if len(state) > 3 else len(state[-1])) + heuristic(state)
-    
-    if isinstance(problem, MagicTriangleProblem ):
-        totalCost = lambda state: (len(state[1])) + heuristic(state)
-    
-    return generalSearch(problem, PriorityQueue(totalCost))
-
-
-###
+        totalCost = lambda node: (sum(node[0][3]) if len(node[0]) > 3 else len(node[0][-1])) + heuristic(node[0])
+    elif isinstance(problem, MagicTriangleProblem ):
+        totalCost = lambda node: (len(node[2])) + heuristic(node[0])
+    #! aziz: fallback case (tmp)
+    else:
+        totalCost = lambda node: len(node[2]) + heuristic(node[0])
+        
+    return generalSearch(problem, PriorityQueue(totalCost), pruning)

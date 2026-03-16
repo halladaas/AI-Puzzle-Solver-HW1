@@ -43,18 +43,20 @@ def solve(problem, search_algorithms):
         results.append([algorithm,num_nodes_exp,num_nodes_gen,cost])
         
     print(problem.__class__.__name__)
-    
+    #! aziz: add prune calls
+    prune_type = 'none'
+
     for algo in search_algorithms:
         if algo.__name__ in ["greedySearch", "astarSearch"]: # heuristic search
             for heuristic in problem.getHeuristics():
-              print(f"Algorithm used: {algo.__name__}")
+              print(f"Algorithm used: {algo.__name__} | Pruning: {prune_type}")
               print(f"Heuristic used: {heuristic.__name__}")
-              solution = algo(problem, heuristic)
-              print_info(solution, algo.__name__) #!--Halla: added algo name as a parameter
+              solution = algo(problem, heuristic, pruning = prune_type)
+              print_info(solution, f"{algo.__name__}_{prune_type}") #!--Halla: added algo name as a parameter
         else:
-            print(f"Algorithm used: {algo.__name__}")
-            solution = algo(problem)
-            print_info(solution, algo.__name__) #!--Halla: added algo name as a parameter
+            print(f"Algorithm used: {algo.__name__} | Pruning: {prune_type}")
+            solution = algo(problem, pruning=prune_type)
+            print_info(solution, f"{algo.__name__}_{prune_type}") #!--Halla: added algo name as a parameter
     
     #!--Halla: Storing results in a dataframe-----
     df = pd.DataFrame(results, columns=['problem', 'nodes_expanded', 'nodes_generated', 'cost'])
@@ -66,8 +68,9 @@ puzzle = [1,8,0,
 #solve(EightPuzzleProblem(puzzle), [breadthFirstSearch, uniformCostSearch, astarSearch, iterativeDeepeningSearch])
 
 #!----Halla-------
-df = solve(MagicTriangleProblem(11), [breadthFirstSearch, depthFirstSearch,iterativeDeepeningSearch, uniformCostSearch, greedySearch, astarSearch])
+df = solve(MagicTriangleProblem(10), [breadthFirstSearch, depthFirstSearch, iterativeDeepeningSearch, uniformCostSearch, greedySearch, astarSearch])
 print(df)
+
 
 pacmap = ["P---------",
           "%%-%%-%-%%",
