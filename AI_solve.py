@@ -82,5 +82,49 @@ pacmap = ["P---------",
 # solve(PacmanProblem(pacmap, (0,0), (4,7)), [breadthFirstSearch,greedySearch,astarSearch])
 
 
+#!#! =========== Nawaf ==========
+#!#! EightPuzzleProblem.py
+
+print('\n\n\n')
+
+puzzle = [
+    1, 3, 8,
+    4, 0, 2,
+    5, 7, 6
+]
+
+df = solve(EightPuzzleProblem(puzzle),
+          [
+            #  depthFirstSearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
+            breadthFirstSearch, 
+            iterativeDeepeningSearch, 
+            uniformCostSearch,
+            # greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
+            astarSearch
+          ]
+      )
+
+# print(df)
+
+randomPuzzle = [
+    1, 8, 2,
+    0, 4, 3,
+    7, 6, 5
+]
+
+df = solve(EightPuzzleProblem(randomPuzzle),
+          [
+            #  depthFirstSearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.  
+              breadthFirstSearch, 
+              iterativeDeepeningSearch, 
+              uniformCostSearch,
+            # greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
+              astarSearch
+          ]
+      )
+
+print(df)
+
+
 
 ###

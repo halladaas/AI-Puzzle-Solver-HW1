@@ -84,12 +84,14 @@ def generalSearch(problem, strategy, pruning = 'none'):
         
         for move in problem.getSuccessors(state):
             #! aziz: problem-specific extraction:
-            #! 8puzzle returns (state, action, cost) -> need move[0]
+            #! LOOK BELOW 8puzzle returns (state, action, cost) -> need move[0] 
+                #!#! nawaf: please revise this, i've changed it to next_state = move because otherwise the structure of the state node will change with each iteration as we get rid of the other data.)
+                #!#! isGoalState()::EightPuzzleProblem.py checks the state node each iteration and if we use move[0] we lose information each iteration and the algorithm fails.
             #! MT returns the state tuple directly -> move
             if isinstance(problem, MagicTriangleProblem):
                 next_state = move
             else:
-                next_state = move[0]
+                next_state = move #!#! nawaf: changed next_state to maintain the structure of the 8-puzzle state
                 
             #! parent pruning: avoid moving back directly to the previous state
             if pruning == 'parent' and parent is not None:
@@ -133,7 +135,7 @@ def iterativeDeepeningSearch(problem, pruning = 'none'):
             if isinstance(problem, MagicTriangleProblem):
                 next_state = move
             else:
-                next_state = move[0]
+                next_state = move #!#! nawaf: changed next_state to move because otherwise each iteration will remove all state node information except the first one. 
                 
             if pruning == 'parent' and parent is not None and next_state == parent: 
                 continue

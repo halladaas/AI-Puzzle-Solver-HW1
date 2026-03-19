@@ -27,7 +27,8 @@ class EightPuzzleProblem (SearchProblem):
 
     # the goal state is defined as [1,2,3,4,5,6,7,8,0]
     def isGoalState(self, state):
-        grid, pos0, _ = state
+        #!#! DEBUG print('state: ', state)
+        grid, pos0, *_ = state #!#! nawaf: accomodates the change of state::generalSearch()::AI_search.py where it now has a variable-length list representing the path.
         for i in range(8):
             if grid[i] != i+1: return False
         return pos0 == 8
