@@ -43,68 +43,71 @@ def solve(problem, search_algorithms):
         results.append([algorithm,num_nodes_exp,num_nodes_gen,cost])
         
     print(problem.__class__.__name__)
+    
     #! aziz: add prune calls
-    prune_type = 'none'
+    #!--- PRUNE TYPE ---
+    prune_type = 'full'
 
     for algo in search_algorithms:
-        if algo.__name__ in ["greedySearch", "astarSearch"]: # heuristic search
+        # heuristic search
+        if algo.__name__ in ["greedySearch", "astarSearch"]: 
             for heuristic in problem.getHeuristics():
               print(f"Algorithm used: {algo.__name__} | Pruning: {prune_type}")
               print(f"Heuristic used: {heuristic.__name__}")
               solution = algo(problem, heuristic, pruning = prune_type)
-              print_info(solution, f"{algo.__name__}_{prune_type}") #!--Halla: added algo name as a parameter
+              #!--Halla: added algo name as a parameter
+              print_info(solution, f"{algo.__name__}_{prune_type}") 
         else:
             print(f"Algorithm used: {algo.__name__} | Pruning: {prune_type}")
             solution = algo(problem, pruning=prune_type)
-            print_info(solution, f"{algo.__name__}_{prune_type}") #!--Halla: added algo name as a parameter
+            #!--Halla: added algo name as a parameter
+            print_info(solution, f"{algo.__name__}_{prune_type}") 
     
     #!--Halla: Storing results in a dataframe-----
     df = pd.DataFrame(results, columns=['problem', 'nodes_expanded', 'nodes_generated', 'cost'])
     return df
 
+'''
+#! =========== Halla ==========
+#! AI_problem.py
+#! MagicTriangle
+
+df = solve(MagicTriangleProblem(11), [breadthFirstSearch, depthFirstSearch, iterativeDeepeningSearch, uniformCostSearch, greedySearch, astarSearch])
+print(df)
+
+print('\n\n\n')
+
+'''
+#!#! =========== Nawaf ==========
+#!#! EightPuzzleProblem.py
+
+''' was given in file by prof ^^ @ Nawaf (aziz)
 puzzle = [1,8,0,
           4,3,2,
           5,7,6]
 #solve(EightPuzzleProblem(puzzle), [breadthFirstSearch, uniformCostSearch, astarSearch, iterativeDeepeningSearch])
+'''
 
-#!----Halla-------
-df = solve(MagicTriangleProblem(10), [breadthFirstSearch, depthFirstSearch, iterativeDeepeningSearch, uniformCostSearch, greedySearch, astarSearch])
-print(df)
-
-
-pacmap = ["P---------",
-          "%%-%%-%-%%",
-          "---%--%---",
-          "-%%%-%%%-%",
-          "---%%%-.-%",
-          "-%------%%"]
-
-# solve(PacmanProblem(pacmap, (0,0), (4,7)), [breadthFirstSearch,greedySearch,astarSearch])
-
-
-#!#! =========== Nawaf ==========
-#!#! EightPuzzleProblem.py
-
-print('\n\n\n')
-
+'''
 puzzle = [
     1, 3, 8,
     4, 0, 2,
     5, 7, 6
 ]
 
+
 df = solve(EightPuzzleProblem(puzzle),
           [
-            #  depthFirstSearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
+            #depthFirstSearch, #!#! exempt because it is not complete in the presence of cycles and infinite branches. Pruning may solve this issue. (aziz) its too long w pruning too
             breadthFirstSearch, 
             iterativeDeepeningSearch, 
             uniformCostSearch,
-            # greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
+            greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
             astarSearch
           ]
       )
 
-# print(df)
+print(df)
 
 randomPuzzle = [
     1, 8, 2,
@@ -112,19 +115,19 @@ randomPuzzle = [
     7, 6, 5
 ]
 
+
 df = solve(EightPuzzleProblem(randomPuzzle),
           [
             #  depthFirstSearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.  
-              breadthFirstSearch, 
+              #breadthFirstSearch, 
               iterativeDeepeningSearch, 
-              uniformCostSearch,
+              #uniformCostSearch,
             # greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
-              astarSearch
+              #astarSearch
           ]
       )
 
 print(df)
-
-
+'''
 
 ###
