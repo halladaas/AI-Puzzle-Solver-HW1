@@ -13,7 +13,7 @@ from AI_search import generalSearch, breadthFirstSearch, depthFirstSearch, \
     Stack, Queue, PriorityQueue
 from EightPuzzleProblem import EightPuzzleProblem
 from MagicTriangleProblem import MagicTriangleProblem
-from PacmanProblem import PacmanProblem
+from SokobanPuzzleProblem import SokobanPuzzleProblem
 import pandas as pd
 
 def solve(problem, search_algorithms):
@@ -129,5 +129,18 @@ df = solve(EightPuzzleProblem(randomPuzzle),
 
 print(df)
 '''
+
+#!#! =========== Aref ==========
+#!#! SokobanPuzzleProblem.py
+
+test_sokoban_board = [
+    "######",
+    "#@ $.#",
+    "######"
+]
+
+print("\n\n------ SOKOBAN ------\n\n")
+df = solve(SokobanPuzzleProblem(test_sokoban_board), [greedySearch, uniformCostSearch, astarSearch])
+print(df)
 
 ###

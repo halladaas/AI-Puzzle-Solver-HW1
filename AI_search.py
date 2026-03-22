@@ -186,7 +186,7 @@ def astarSearch(problem, heuristic, pruning = 'none'):
     # the number of elements in a state changes for different problems, hence
     # the following checks
     
-    #!----Halla : added isinstance checking and path cost for the MTP
+    #! xx--Halla : added isinstance checking and path cost for the MTP--xx
     #! aziz: cost = just length of the path = node[2] for all problem instances + heuristic
     totalCost = lambda node: len(node[2]) + heuristic(node[0])            
     return generalSearch(problem, PriorityQueue(totalCost), pruning)
