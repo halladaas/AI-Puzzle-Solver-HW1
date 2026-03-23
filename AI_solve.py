@@ -67,7 +67,7 @@ def solve(problem, search_algorithms):
     df = pd.DataFrame(results, columns=['problem', 'nodes_expanded', 'nodes_generated', 'cost'])
     return df
 
-'''
+
 #! =========== Halla ==========
 #! AI_problem.py
 #! MagicTriangle
@@ -77,7 +77,7 @@ print(df)
 
 print('\n\n\n')
 
-'''
+
 #!#! =========== Nawaf ==========
 #!#! EightPuzzleProblem.py
 
@@ -133,14 +133,14 @@ print(df)
 #!#! =========== Aref ==========
 #!#! SokobanPuzzleProblem.py
 
-test_sokoban_board = [
-    "######",
-    "#@ $.#",
-    "######"
-]
+# test_sokoban_board = [
+#     "######",
+#     "#@ $.#",
+#     "######"
+# ]
 
-print("\n\n------ SOKOBAN ------\n\n")
-df = solve(SokobanPuzzleProblem(test_sokoban_board), [greedySearch, uniformCostSearch, astarSearch])
-print(df)
+# print("\n\n------ SOKOBAN ------\n\n")
+# df = solve(SokobanPuzzleProblem(test_sokoban_board), [greedySearch, uniformCostSearch, astarSearch])
+# print(df)
 
 ###

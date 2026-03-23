@@ -37,7 +37,9 @@ class AI_heuristics:
             Returns: cost
             
         """
-        triangle, _, S = state
+        #halla: state form changed after edits. now all_vars is of the form ([triangle], [path], S)
+        all_vars, _, _ = state #print to check the state variables
+        triangle, path, S = all_vars
         
         #calculate the side sums
         circles = ([0,1,2],[2,3,4], [4,5,0])
