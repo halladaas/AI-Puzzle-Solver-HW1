@@ -20,7 +20,7 @@ def solve(problem, search_algorithms):
 
     #!--Halla: Storing results in a dataframe-----
     results = []
-    
+
     #!--Halla: added algorithm name as a parameter
     def print_info(solution, algorithm):
         if not solution:
@@ -33,7 +33,7 @@ def solve(problem, search_algorithms):
         else:
             finalstate, steps = state[:2]
             cost = len(steps)
-            
+
         print(f"Final state: {finalstate}")
         print(f"Solution: {steps}")
         print(f"Cost: {cost}")
@@ -41,9 +41,9 @@ def solve(problem, search_algorithms):
         print(f"Number of nodes generated: {num_nodes_gen}")
         print("="*80+"\n")
         results.append([algorithm,num_nodes_exp,num_nodes_gen,cost])
-        
+
     print(problem.__class__.__name__)
-    
+
     #! aziz: add prune calls
     #!--- PRUNE TYPE ---
     prune_type = 'full'
@@ -52,27 +52,37 @@ def solve(problem, search_algorithms):
         # heuristic search
         if algo.__name__ in ["greedySearch", "astarSearch"]: 
             for heuristic in problem.getHeuristics():
-              print(f"Algorithm used: {algo.__name__} | Pruning: {prune_type}")
-              print(f"Heuristic used: {heuristic.__name__}")
-              solution = algo(problem, heuristic, pruning = prune_type)
-              #!--Halla: added algo name as a parameter
-              print_info(solution, f"{algo.__name__}_{prune_type}") 
+                print(f"Algorithm used: {algo.__name__} | Pruning: {prune_type}")
+                print(f"Heuristic used: {heuristic.__name__}")
+                solution = algo(problem, heuristic, pruning = prune_type)
+                #!--Halla: added algo name as a parameter
+                print_info(solution, f"{algo.__name__}_{prune_type}") 
         else:
             print(f"Algorithm used: {algo.__name__} | Pruning: {prune_type}")
             solution = algo(problem, pruning=prune_type)
             #!--Halla: added algo name as a parameter
             print_info(solution, f"{algo.__name__}_{prune_type}") 
-    
+
     #!--Halla: Storing results in a dataframe-----
     df = pd.DataFrame(results, columns=['problem', 'nodes_expanded', 'nodes_generated', 'cost'])
     return df
 
 
 #! =========== Halla ==========
-#! AI_problem.py
-#! MagicTriangle
+#! MagicTriangleProblem.py
 
-df = solve(MagicTriangleProblem(11), [breadthFirstSearch, depthFirstSearch, iterativeDeepeningSearch, uniformCostSearch, greedySearch, astarSearch])
+
+df = solve(
+    MagicTriangleProblem(11),
+    [
+        # breadthFirstSearch,
+        # depthFirstSearch,
+        # iterativeDeepeningSearch,
+        # uniformCostSearch,
+        # greedySearch,
+         astarSearch,
+    ],
+)
 print(df)
 
 print('\n\n\n')
@@ -81,14 +91,22 @@ print('\n\n\n')
 #!#! =========== Nawaf ==========
 #!#! EightPuzzleProblem.py
 
-''' was given in file by prof ^^ @ Nawaf (aziz)
-puzzle = [1,8,0,
-          4,3,2,
-          5,7,6]
-#solve(EightPuzzleProblem(puzzle), [breadthFirstSearch, uniformCostSearch, astarSearch, iterativeDeepeningSearch])
-'''
 
-'''
+#! ----- Assigned Puzzle -----
+puzzle = [1, 8, 0, 4, 3, 2, 5, 7, 6]
+solve(
+    EightPuzzleProblem(puzzle),
+    [
+        # breadthFirstSearch, 
+        # uniformCostSearch, 
+         astarSearch, 
+        # iterativeDeepeningSearch
+     ],
+)
+
+
+
+#! ----- Custom Puzzle -----
 puzzle = [
     1, 3, 8,
     4, 0, 2,
@@ -96,18 +114,22 @@ puzzle = [
 ]
 
 
-df = solve(EightPuzzleProblem(puzzle),
-          [
-            #depthFirstSearch, #!#! exempt because it is not complete in the presence of cycles and infinite branches. Pruning may solve this issue. (aziz) its too long w pruning too
-            breadthFirstSearch, 
-            iterativeDeepeningSearch, 
-            uniformCostSearch,
-            greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
-            astarSearch
-          ]
-      )
+df = solve(
+    EightPuzzleProblem(puzzle),
+    [
+        # depthFirstSearch, #!#! exempt because it is not complete in the presence of cycles and infinite branches. Pruning may solve this issue. (aziz) its too long w pruning too
+        # breadthFirstSearch,
+        # iterativeDeepeningSearch,
+        # uniformCostSearch,
+        # greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
+        # astarSearch
+    ],
+)
 
 print(df)
+
+
+#! ----- Random Puzzle -----
 
 randomPuzzle = [
     1, 8, 2,
@@ -118,29 +140,29 @@ randomPuzzle = [
 
 df = solve(EightPuzzleProblem(randomPuzzle),
           [
-            #  depthFirstSearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.  
-              #breadthFirstSearch, 
-              iterativeDeepeningSearch, 
-              #uniformCostSearch,
+            # depthFirstSearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.  
+            # breadthFirstSearch, 
+            # iterativeDeepeningSearch, 
+            # uniformCostSearch,
             # greedySearch, #!#! exempt because it is not complete in the precense of cycles and infinite branches. Pruning may solve this issue.
-              #astarSearch
+            # astarSearch
           ]
       )
 
 print(df)
-'''
+
 
 #!#! =========== Aref ==========
 #!#! SokobanPuzzleProblem.py
 
-# test_sokoban_board = [
-#     "######",
-#     "#@ $.#",
-#     "######"
-# ]
+test_sokoban_board = [
+    "######",
+    "#@ $.#",
+    "######"
+]
 
-# print("\n\n------ SOKOBAN ------\n\n")
-# df = solve(SokobanPuzzleProblem(test_sokoban_board), [greedySearch, uniformCostSearch, astarSearch])
-# print(df)
+print("\n\n------ SOKOBAN ------\n\n")
+df = solve(SokobanPuzzleProblem(test_sokoban_board), [greedySearch, uniformCostSearch, astarSearch])
+print(df)
 
 ###

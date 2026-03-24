@@ -170,31 +170,33 @@ def iterativeDeepeningSearch(problem, pruning = 'none'):
 
 
 def uniformCostSearch(problem, pruning = 'none'):
-    #!----Halla : added isinstance checking and path cost for the MTP
-    #! aziz: cost = just length of the path = node[2] for all problem instances    
-    if isinstance(problem, MagicTriangleProblem ):
-        pathCost = lambda state: (len(state[2]))
+    #! Halla/aziz: cost = length of the path = node[2] for all problem instances    
+    pathCost = lambda node: (len(node[2]))
         
     return generalSearch(problem, PriorityQueue(pathCost), pruning)
 
 
 def greedySearch(problem, heuristic, pruning = 'none'):
     
-    #return generalSearch(problem, PriorityQueue( lambda node: heuristic(node[1])), pruning)
-    return generalSearch(problem, PriorityQueue(heuristic), pruning)
+    #! --Halla : added isinstance checking and path cost for the MTP--
+    if isinstance(problem, MagicTriangleProblem ):
+        return generalSearch(problem, PriorityQueue(heuristic), pruning)
+    else:
+    #! aziz: general for 8puzzle and sokoban    
+        return generalSearch(problem, PriorityQueue( lambda node: heuristic(node[0])), pruning)
+    
 
 def astarSearch(problem, heuristic, pruning = 'none'):
     # the given function uses the number of steps as g-cost (uniform cost)
     # the number of elements in a state changes for different problems, hence
     # the following checks
     
-    #! xx--Halla : added isinstance checking and path cost for the MTP--xx
-    #! aziz: cost = just length of the path = node[2] for all problem instances + heuristic
-    
-    # totalCost = lambda node: len(node[1]) + heuristic(node[1])            
-    # return generalSearch(problem, PriorityQueue(totalCost), pruning)
-    
+    #! --Halla : added isinstance checking and path cost for the MTP--
     if isinstance(problem, MagicTriangleProblem ):
         totalCost = lambda state: (len(state[2])) + heuristic(state)
+    else:
+    #! aziz: cost = just length of the path = node[2] for all problem instances + heuristic
+        totalCost = lambda node: len(node[2]) + heuristic(node[0])              
     
     return generalSearch(problem, PriorityQueue(totalCost), pruning)
+    
